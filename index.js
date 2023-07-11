@@ -206,7 +206,7 @@ pet.toJSON = function () {
 //   //     res.status(500).send(e);
 //   //   });
 // });
-app.get("/",(req,res)=>{
+app.get("/app",(req,res)=>{
   res.json({message:"hello from express app"});
 })
 // // app.get("/users", async (req, res) => {
