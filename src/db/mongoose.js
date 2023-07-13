@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 // const validator=require('validator');
 // const { default: isEmail } = require("validator/lib/isemail");
 
-mongoose.connect("mongodb://127.0.0.1:27017/althaf", {
+mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
 });
 // creating a model with name and schema as parameters
