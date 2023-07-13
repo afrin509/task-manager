@@ -120,7 +120,6 @@ const myFunction = async () => {
   // const isMatch=await bcrypt.compare('Red12345',hashPassword)
   // console.log("isMatch",isMatch);
   const token = jwt.sign({ _id: "abc123" }, "thisismynewcourse", {
-    expiresIn: "7 days",
   });
   console.log(token);
   // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJhYmMxMjMiLCJpYXQiOjE2ODUxOTU1MjF9.D0kRYmPFSGzSWhTG9aGhOKuxRAMyuXffZOYyPf-cOVo
