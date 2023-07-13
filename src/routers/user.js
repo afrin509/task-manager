@@ -12,7 +12,7 @@ router.get("/test", (req, res) => {
 });
 
 router.post("/users", async (req, res) => {
-  console.log("req body", req.body);
+  console.log("req body inside users", req.body);
   const user = new User(req.body);
   // user
   //   .save()
