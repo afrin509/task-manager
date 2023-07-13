@@ -7,7 +7,6 @@ const Task = require("./models/task");
 // importing user router from user file
 const app = express();
 const port = process.env.Port||8000;
-console.log("port",process.env,port);
 const userRouter = require("./routers/user");
 const taskRouter = require("./routers/task");
 const multer = require("multer");
