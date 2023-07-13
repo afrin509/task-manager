@@ -25,6 +25,8 @@ router.post("/users", async (req, res) => {
 
   //     res.status(400).send(err);
   //   });
+  console.log("user in routers folders",user)
+
   try {
     await user.save();
     //  if any pblm arises while savng the user it will be in caught in catch block
@@ -35,15 +37,15 @@ router.post("/users", async (req, res) => {
   }
 });
 
-// router.get("/users", async (req, res) => {
-//   try {
-//     const users = await User.find({});
-//     //  if any pblm arises while savng the user it will be in caught in catch block
-//     res.status(201).send(users);
-//   } catch (e) {
-//     res.status(500).send(e);
-//   }
-// });
+router.get("/users", async (req, res) => {
+  try {
+    const users = await User.find({});
+    //  if any pblm arises while savng the user it will be in caught in catch block
+    res.status(201).send("users found");
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
 // ikkada the second call back function is called route handler and first parameter is for the route path now we gonna pass a middleware function in between these two
 
 // by adding auth after request is sent it will run quth function then it will run routehandler

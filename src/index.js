@@ -1,15 +1,15 @@
 const express = require("express");
-require("./src/db/mongoose");
+require("./db/mongoose");
 
 // this will allow to imoprt everything from mongoose
-const User = require("./src/models/user");
-const Task = require("./src/models/task");
+const User = require("./models/user");
+const Task = require("./models/task");
 // importing user router from user file
 const app = express();
 const port = process.env.Port||8000;
 console.log("port",process.env,port);
-const userRouter = require("./src/routers/user");
-const taskRouter = require("./src/routers/task");
+const userRouter = require("./routers/user");
+const taskRouter = require("./routers/task");
 const multer = require("multer");
 // this is the most popular npm library we are using for file uplaoding in nodejs
 // to configure multer
@@ -207,7 +207,7 @@ pet.toJSON = function () {
 //   //   });
 // });
 app.get("/app",(req,res)=>{
-  res.json({message:"hello from express app"});
+  res.json({message:"hello from  app"});
 })
 // // app.get("/users", async (req, res) => {
 // //   // const user=new User(req.body);
