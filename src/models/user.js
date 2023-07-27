@@ -91,7 +91,7 @@ userSchema.methods.toJSON = function () {
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   console.log("user", user, user._id.toString());
-  // const token = jwt.sign({ _id: user._id.toString() }, "thisis");
+  const token = jwt.sign({ _id: user._id.toString() }, "thisis");
   console.log("i am inside generateAuthToken inside models", "token", token);
   user.tokens.push({ token,_id: user._id.toString() });
   await user.save();
@@ -99,6 +99,7 @@ userSchema.methods.generateAuthToken = async function () {
 };
 // statics are model methods
 userSchema.statics.findByCredentials = async (email, password) => {
+  console.log("users-email",email,"users-password",password ,"inside findByCredentails")
   const user = await User.findOne({ email: email });
   // my approach but in bcrypt we have builtin functions that does comparision automatically
   //  const bcryptedPassword=await bcrypt.hash(password,8)
@@ -106,7 +107,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   //  {
   //   return true;
   //  }
-
+console.log("user insidefindbycredentials",user)
   if (!user) {
     throw new Error("Unable to login");
   }
@@ -114,7 +115,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   if (!isMatch) {
     throw new Error("Unable to login,Password did not match");
   }
-  console.log("user inside findbycredentials",user);
+  console.log("user inside findbycredentials after matching correct password",user);
   return user;
 };
 // setting up the hasing logic for password before saving the doc into db
@@ -146,7 +147,7 @@ userSchema.pre(
   async function (next) {
     const user = this;
     console.log("inside pre function of delete One", this);
-    await Task.deleteMany({ owner: user._id });
+    await Task.deleteMany({ _id: user._id });
     next();
   }
 );

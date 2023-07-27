@@ -150,13 +150,13 @@ router.post("/users/login", async (req, res) => {
       req.body.email,
       req.body.password
     );
-    console.log("user in user.js",user);
+    console.log("user before user.js",user);
     // from the user model file you have written a custom function findByCredentials and you will get the user if you have entered proper details else you will get the error
     const token = await user.generateAuthToken();
     console.log("inside users login", "token", token);
-
+    console.log("user after user.js",user);
     //this will generate tokens
-    sendWelcomeEmail(user.email, user.name);
+    // sendWelcomeEmail(user.email, user.name);
 
     res.send({ user: user, token: token });
     // res.send({user:user.getPublicProfile(), token: token})
@@ -169,6 +169,7 @@ router.post("/users/login", async (req, res) => {
 
     //   return userObject;
     // };
+  
   } catch (e) {
     console.log("err", e);
     res.status(400).send(e);
@@ -316,13 +317,14 @@ router.post(
       .toBuffer();
     // ye actually buffer return karega but iska jo image type hein png
     // console.log("2",Buffer.byteLength(buffer));  size of the file:116277 i found only use is its is decreasing the size
-    console.log("2", Buffer.byteLength(buffer));
+    // console.log("2", Buffer.byteLength(buffer));
     req.user.avatar = buffer;
 
     await req.user.save();
     res.send({ "avatar updated succefully": req.user.avatar });
   },
   (err, req, res, next) => {
+    console.log("error while uploading avatar",err)
     res.status(400).send({ error: err.message });
   }
 );

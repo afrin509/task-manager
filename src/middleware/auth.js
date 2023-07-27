@@ -3,12 +3,11 @@ const User=require('../models/user');
 
 const auth=async(req,res,next)=>{
    try{
-      // console.log("req headers",req.header(''),req)
-    
+      console.log("req headers",req.header('Authorization'));
      const token=req.header('Authorization').replace("Bearer ","");
      console.log("token inside auth of user",token);
     //  console.log("token");
-   //  const decoded=jwt.verify(token,"thisis")
+    const decoded=jwt.verify(token,"thisis")
     console.log("decoded",decoded);
     const user=await User.findOne({_id:decoded._id,"tokens.token":token});
     console.log("user",user);
