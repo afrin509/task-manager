@@ -1,146 +1,146 @@
-const express = require("express");
-require("./src/db/mongoose");
+// const express = require("express");
+// require("./src/db/mongoose");
 
-// this will allow to imoprt everything from mongoose
-const User = require("./src/models/user");
-const Task = require("./src/models/task");
-// importing user router from user file
-const app = express();
-const port = process.env.Port||8000;
-const userRouter = require("./src/routers/user");
-const taskRouter = require("./src/routers/task");
-const multer = require("multer");
-// this is the most popular npm library we are using for file uplaoding in nodejs
-// to configure multer
-const upload = multer({
-  dest: "images",
-  limits: {
-    fileSize: 1000000,
-    // this will limit the file size to be one megabyte and not more than that now if you try to uploaf >1mb say fall.jpg it shows error
-  },
-  // to filter based on file type
-  // function fileFilter (req, file, cb) {
+// // this will allow to imoprt everything from mongoose
+// const User = require("./src/models/user");
+// const Task = require("./src/models/task");
+// // importing user router from user file
+// const app = express();
+// const port = process.env.Port||8000;
+// const userRouter = require("./src/routers/user");
+// const taskRouter = require("./src/routers/task");
+// const multer = require("multer");
+// // this is the most popular npm library we are using for file uplaoding in nodejs
+// // to configure multer
+// const upload = multer({
+//   dest: "images",
+//   limits: {
+//     fileSize: 1000000,
+//     // this will limit the file size to be one megabyte and not more than that now if you try to uploaf >1mb say fall.jpg it shows error
+//   },
+//   // to filter based on file type
+//   // function fileFilter (req, file, cb) {
 
-  //   // The function should call `cb` with a boolean
-  //   // to indicate if the file should be accepted
+//   //   // The function should call `cb` with a boolean
+//   //   // to indicate if the file should be accepted
 
-  //   // To reject this file pass `false`, like so:
-  //   cb(null, false)
+//   //   // To reject this file pass `false`, like so:
+//   //   cb(null, false)
 
-  //   // To accept the file pass `true`, like so:
-  //   cb(null, true)
+//   //   // To accept the file pass `true`, like so:
+//   //   cb(null, true)
 
-  //   // You can always pass an error if something goes wrong:
-  //   cb(new Error('I don\'t have a clue!'))
+//   //   // You can always pass an error if something goes wrong:
+//   //   cb(new Error('I don\'t have a clue!'))
 
-  // }
-  fileFilter(req, file, cb) {
-    // file mein we have all methods originalname and then endsWith wich is present in multer of npm
-    //  if(!file.originalname.endsWith('.pdf'))
-    //  {
-    //    return cb(new Error('Please upload a PDF'))
-    //   }
-    if (!file.originalname.match(".(doc|docx)$")) {
-      return cb(new Error("Please upload a PDF"));
-    }
-    //  if we want to allow othre extension we can use regex like \.(doc|docx)$ here backslach .  helps in going to the char where you fnd first . and then we have doc|docx select any of above it will match and $ suggest that do |docx should end at last not in anywhere in middle means .docxopopo   not a ce
-    //  if it is pdf accept it
-    cb(undefined, true);
-  },
+//   // }
+//   fileFilter(req, file, cb) {
+//     // file mein we have all methods originalname and then endsWith wich is present in multer of npm
+//     //  if(!file.originalname.endsWith('.pdf'))
+//     //  {
+//     //    return cb(new Error('Please upload a PDF'))
+//     //   }
+//     if (!file.originalname.match(".(doc|docx)$")) {
+//       return cb(new Error("Please upload a PDF"));
+//     }
+//     //  if we want to allow othre extension we can use regex like \.(doc|docx)$ here backslach .  helps in going to the char where you fnd first . and then we have doc|docx select any of above it will match and $ suggest that do |docx should end at last not in anywhere in middle means .docxopopo   not a ce
+//     //  if it is pdf accept it
+//     cb(undefined, true);
+//   },
 
-  //dest is used for destination and images that represent the shortcut for name of the folder where we want to upload files
-});
-// for uploading images we need to use post
-// we gonna use upload dantlo we have a method called single which is used as middleware
-// app.post("/upload",upload.single('upload'),(req,res)=>{
-//   // when perfect routes matched it will go and check for upload option inside params then whatever it got from upload from req.body it will set to
-// //  images folder as provideed in the upload option
-//    res.send("image uploaded succefully");
-// })
-// lets just how error is passed to express by multer using demo err function
-// const errMiddleware=(req,res,next)=>{
-//   throw new Error('From my middleware');
-// }
+//   //dest is used for destination and images that represent the shortcut for name of the folder where we want to upload files
+// });
+// // for uploading images we need to use post
+// // we gonna use upload dantlo we have a method called single which is used as middleware
+// // app.post("/upload",upload.single('upload'),(req,res)=>{
+// //   // when perfect routes matched it will go and check for upload option inside params then whatever it got from upload from req.body it will set to
+// // //  images folder as provideed in the upload option
+// //    res.send("image uploaded succefully");
+// // })
+// // lets just how error is passed to express by multer using demo err function
+// // const errMiddleware=(req,res,next)=>{
+// //   throw new Error('From my middleware');
+// // }
 
-// app.post("/upload",errMiddleware,(req,res)=>{
-//   res.send("image uploaded succefully");
-// },
-// // this cb function will work if you have any error by errMiddleware
-// (err,req,res,next)=>{
-//    res.status(400).send({error:err})
-// }
-//   // when perfect routes matched it will go and check for upload option inside params then whatever it got from upload from req.body it will set to
-// //  images folder as provideed in the upload option
+// // app.post("/upload",errMiddleware,(req,res)=>{
+// //   res.send("image uploaded succefully");
+// // },
+// // // this cb function will work if you have any error by errMiddleware
+// // (err,req,res,next)=>{
+// //    res.status(400).send({error:err})
+// // }
+// //   // when perfect routes matched it will go and check for upload option inside params then whatever it got from upload from req.body it will set to
+// // //  images folder as provideed in the upload option
 
-// )
-// lets just how error is passed to express by multer using real file upload
-app.post(
-  "/upload",
-  upload.single("upload"),
-  (req, res) => {
-    res.send("image uploaded succefully");
-  },
-  // this cb function will work if you have any error by errMiddleware
-  (err, req, res, next) => {
-    res.status(400).send({ error: err.message });
-  }
-  // when perfect routes matched it will go and check for upload option inside params then whatever it got from upload from req.body it will set to
-  //  images folder as provideed in the upload option
-);
-
-// app.use((req,res,next)=>{
-//   // console.log(req.method,req.path);
-//   if(req.method=="GET")
-//   {
-//      res.send("get requests are disabled")
+// // )
+// // lets just how error is passed to express by multer using real file upload
+// app.post(
+//   "/upload",
+//   upload.single("upload"),
+//   (req, res) => {
+//     res.send("image uploaded succefully");
+//   },
+//   // this cb function will work if you have any error by errMiddleware
+//   (err, req, res, next) => {
+//     res.status(400).send({ error: err.message });
 //   }
-//   else
-//   {
-//     next();
+//   // when perfect routes matched it will go and check for upload option inside params then whatever it got from upload from req.body it will set to
+//   //  images folder as provideed in the upload option
+// );
 
-//   }
-// })
-app.listen(port, () => {
-  console.log("server is up on port" + port);
-});
-app.use(express.json());
-app.use(userRouter);
-app.use(taskRouter);
+// // app.use((req,res,next)=>{
+// //   // console.log(req.method,req.path);
+// //   if(req.method=="GET")
+// //   {
+// //      res.send("get requests are disabled")
+// //   }
+// //   else
+// //   {
+// //     next();
 
-// without middleware::if you raise the request then directly you will go to routehandler
-// with middleware: if you raise request then you can use some custom defined functions where you can do validations or put som echecks and then you can pass to routes handlers
-const jwt = require("jsonwebtoken");
-// const bcrypt=require('bcryptjs');
-const myFunction = async () => {
-  // const password='Red1245';
-  // const hashPassword=await bcrypt.hash(password,8);
-  // // bcrypt has a method called hash that will take the password need to be bcrypted with 8 rounds of hashing algo
-  // // 8 is ideal given by creator
-  // // with encryption algo  we can turn the resulted string to original string where as hashing algo cannot be reversible to get back our original plain text algo
-  // const isMatch=await bcrypt.compare('Red12345',hashPassword)
-  // console.log("isMatch",isMatch);
-  const token = jwt.sign({ _id: "abc123" }, "thisismynewcourse", {
-  });
-  console.log(token);
-  // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJhYmMxMjMiLCJpYXQiOjE2ODUxOTU1MjF9.D0kRYmPFSGzSWhTG9aGhOKuxRAMyuXffZOYyPf-cOVo
-  // this token has middle token when we decode it as payload which consists of data we have provided and second it will give info about when it has created it
-  ///first part for headers
-  ///signature to verify our token
-  const data = jwt.verify(token, "thisismynewcourse");
-  // this data gives you  { _id: 'abc123', iat: 1685196512 } iat means issued at if and only if the secret signature string:thisismynewcourse is same as that you provided in parent
-  console.log("data", data);
-  // we can even add extra parameters that let us to expire the tokenn for particular time span
-  // err after expiring  expiredAt: 2023-05-27T14:12:35.000Z
-};
+// //   }
+// // })
+// app.listen(port, () => {
+//   console.log("server is up on port" + port);
+// });
+// app.use(express.json());
+// app.use(userRouter);
+// app.use(taskRouter);
 
-myFunction();
-let pet = {
-  name: "afrin",
-  age: "23",
-};
-pet.toJSON = function () {
-  return {};
-};
+// // without middleware::if you raise the request then directly you will go to routehandler
+// // with middleware: if you raise request then you can use some custom defined functions where you can do validations or put som echecks and then you can pass to routes handlers
+// const jwt = require("jsonwebtoken");
+// // const bcrypt=require('bcryptjs');
+// const myFunction = async () => {
+//   // const password='Red1245';
+//   // const hashPassword=await bcrypt.hash(password,8);
+//   // // bcrypt has a method called hash that will take the password need to be bcrypted with 8 rounds of hashing algo
+//   // // 8 is ideal given by creator
+//   // // with encryption algo  we can turn the resulted string to original string where as hashing algo cannot be reversible to get back our original plain text algo
+//   // const isMatch=await bcrypt.compare('Red12345',hashPassword)
+//   // console.log("isMatch",isMatch);
+//   const token = jwt.sign({ _id: "abc123" }, "thisismynewcourse", {
+//   });
+//   console.log(token);
+//   // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJhYmMxMjMiLCJpYXQiOjE2ODUxOTU1MjF9.D0kRYmPFSGzSWhTG9aGhOKuxRAMyuXffZOYyPf-cOVo
+//   // this token has middle token when we decode it as payload which consists of data we have provided and second it will give info about when it has created it
+//   ///first part for headers
+//   ///signature to verify our token
+//   const data = jwt.verify(token, "thisismynewcourse");
+//   // this data gives you  { _id: 'abc123', iat: 1685196512 } iat means issued at if and only if the secret signature string:thisismynewcourse is same as that you provided in parent
+//   console.log("data", data);
+//   // we can even add extra parameters that let us to expire the tokenn for particular time span
+//   // err after expiring  expiredAt: 2023-05-27T14:12:35.000Z
+// };
+
+// myFunction();
+// let pet = {
+//   name: "afrin",
+//   age: "23",
+// };
+// pet.toJSON = function () {
+//   return {};
+// };
 
 // const router=new express.Router();
 // router.get("/test",(req,res)=>{
@@ -204,9 +204,9 @@ pet.toJSON = function () {
 //   //     res.status(500).send(e);
 //   //   });
 // });
-app.get("/app",(req,res)=>{
-  res.json({message:"hello from  app"});
-})
+// app.get("/app",(req,res)=>{
+//   res.json({message:"hello from  app"});
+// })
 // // app.get("/users", async (req, res) => {
 // //   // const user=new User(req.body);
 // //   // User.find({})
@@ -364,4 +364,11 @@ app.get("/app",(req,res)=>{
 //   // as printing this will get to know that user mein actucally tasks save nahi ho rahe hein kyunki ye virtual but if you log user.tasks then we get tasks present
 // }
 // main();
-module.exports=app;
+
+
+const app = require("./src/app")
+const port = process.env.PORT
+
+app.listen(port, () => {
+  console.log('Server is up on port'+ port)
+})

@@ -8,12 +8,15 @@ const auth=async(req,res,next)=>{
      const token=req.header('Authorization').replace("Bearer ","");
      console.log("token inside auth of user",token);
     //  console.log("token");
-    const decoded=jwt.verify(token,process.env.JWT_TOKEN)
+   //  const decoded=jwt.verify(token,"thisis")
     console.log("decoded",decoded);
     const user=await User.findOne({_id:decoded._id,"tokens.token":token});
+    console.log("user",user);
+    
     if(!user)
     {
-      throw new Error();
+
+      throw new Error("user not found");
     }
     req.token=token;
     req.user=user;

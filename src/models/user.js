@@ -91,9 +91,9 @@ userSchema.methods.toJSON = function () {
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   console.log("user", user, user._id.toString());
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_TOKEN);
+  // const token = jwt.sign({ _id: user._id.toString() }, "thisis");
   console.log("i am inside generateAuthToken inside models", "token", token);
-  user.tokens.push({ token });
+  user.tokens.push({ token,_id: user._id.toString() });
   await user.save();
   return token;
 };
@@ -106,6 +106,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   //  {
   //   return true;
   //  }
+
   if (!user) {
     throw new Error("Unable to login");
   }
@@ -113,6 +114,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   if (!isMatch) {
     throw new Error("Unable to login,Password did not match");
   }
+  console.log("user inside findbycredentials",user);
   return user;
 };
 // setting up the hasing logic for password before saving the doc into db
@@ -120,7 +122,7 @@ userSchema.pre("save", async function (next) {
   const user = this;
   //  if you use aroow fun you dont have access to this inside arrow functions
 
-  console.log("just before saving");
+  console.log("just before saving",user);
   //  user.save();
   if (user.isModified("password")) {
     console.log(" about to bcrypt");
@@ -134,6 +136,7 @@ userSchema.pre("save", async function (next) {
   //     "_id": "646eeab92f9cc1049387d62f",
   //     "__v": 0
   // }
+  console.log("user after executing save function",user)
   next();
 });
 // deleting user tasks if user is removed now

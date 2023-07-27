@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
-// const validator=require('validator');
+const validator=require('validator');
 // const { default: isEmail } = require("validator/lib/isemail");
+console.log("env variable mongodb",(process.env.MONGODB_URL));
+// mongoose.connect("mongodb+srv://taskapp:Afrindudekula321@cluster0.hqujmbv.mongodb.net/?retryWrites=true&w=majority", {
 
-mongoose.connect(process.env.MONGODB_URL, {
-  useNewUrlParser: true,
-});
 // creating a model with name and schema as parameters
 // const User=mongoose.model('User',{
 //     name:{
@@ -25,7 +24,6 @@ mongoose.connect(process.env.MONGODB_URL, {
 // }).catch((err)=>{
 //    console.log("Error!",err)
 // })
-const validator = require("validator");
 // const Task=mongoose.model('Task',{
 //     description:{
 //   type:String,

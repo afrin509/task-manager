@@ -2,7 +2,6 @@ const express = require("express");
 const router = new express.Router();
 const User = require("../models/user");
 const auth = require("../middleware/auth");
-const mongoose = require("mongoose");
 const multer = require("multer");
 const sharp = require("sharp");
 const { sendWelcomeEmail, cancelEmail } = require("../emails/account");
@@ -151,6 +150,7 @@ router.post("/users/login", async (req, res) => {
       req.body.email,
       req.body.password
     );
+    console.log("user in user.js",user);
     // from the user model file you have written a custom function findByCredentials and you will get the user if you have entered proper details else you will get the error
     const token = await user.generateAuthToken();
     console.log("inside users login", "token", token);
@@ -204,7 +204,7 @@ router.post("/users/logoutall", auth, async (req, res) => {
     console.log("req.user", req.user);
     res.status(200).send(req.user);
   } catch (e) {
-    res.status(500).send(e);
+    res.status(500).send(e)
   }
 });
 router.get("/users", auth, async (req, res) => {
@@ -223,6 +223,7 @@ router.get("/users", auth, async (req, res) => {
   // 6471ee4a96f077910e9e3a27
 });
 router.get("/users/me", auth, async (req, res) => {
+  
   res.send(req.user);
 });
 router.get("/users/:id", async (req, res) => {
